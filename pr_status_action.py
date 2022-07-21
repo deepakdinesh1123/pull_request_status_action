@@ -1,3 +1,4 @@
+from ast import arg
 import json
 import logging
 import os
@@ -79,8 +80,11 @@ def _create_commit_status(statuses_url: str, args: Args) -> None:
     if args.target_url:
         payload["target_url"] = args.target_url
 
-    if args.description:
-        payload["description"] = args.description
+    if args.description == "NO CHANGE":
+        payload["description"] = "BENCHMARKS NOT CHANGED SIGNIFICANTLY"
+    
+    if args.description == "CHANGED":
+        payload["description"] = "SOME BENCHMARKS HAVE CHANGED SIGNIFICANTLY. PERFFORMANCE DECREASED"
 
     response = requests.post(statuses_url, headers=_headers(), data=json.dumps(payload))
     response.raise_for_status()
